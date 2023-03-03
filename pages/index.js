@@ -255,7 +255,7 @@ export default function Home() {
           </nav>
         </header>
         {/* Hero */}
-        <section className="section-hero my-20">
+        <section className="section-hero my-10">
           <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
             <div className="mr-auto place-self-center lg:col-span-7">
               <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
@@ -274,12 +274,12 @@ export default function Home() {
                   Loading...
                 </p>
               ) : (
-                <div className="bg-white w-96 h-auto">
+                <div className="w-96 h-auto pt-40">
                   <img
                     src="https://gateway.ipfscdn.io/ipfs/QmVDz9x8KvBBr7cesG34RrGsrorCZxv5nYJz4iEbXnPBh8/3.jpg"
                     alt={`${contractMetadata?.name} preview image`}
                   />
-                  <div className="text-center bg-black text-white">
+                  <div className="text-center bg-black text-white max-w-screen py-10">
                     {claimedSupply ? (
                       <p>
                         <b>{numberClaimed}</b>
@@ -302,10 +302,9 @@ export default function Home() {
                       </div>
                     ) : (
                       <>
-                        <p>Quantity</p>
-                        <div className={styles.quantityContainer}>
+                        <div className="flex tex-center justify-center flex-row gap-10 items-center py-4">
                           <button
-                            className={`${styles.quantityControlButton}`}
+                            className="text-white border rounded-lg w-14"
                             onClick={() => setQuantity(quantity - 1)}
                             disabled={quantity <= 1}
                           >
@@ -315,7 +314,7 @@ export default function Home() {
                           <h4>{quantity}</h4>
 
                           <button
-                            className={`${styles.quantityControlButton}`}
+                            className="text-white border rounded-lg w-14"
                             onClick={() => setQuantity(quantity + 1)}
                             disabled={quantity >= maxClaimable}
                           >
@@ -335,11 +334,11 @@ export default function Home() {
                             contractAddress={editionDrop?.getAddress() || ""}
                             action={(cntr) => cntr.erc1155.claim(tokenId, quantity)}
                             isDisabled={!canClaim || buttonLoading}
+                            className="bg-red-500"
                             onError={(err) => {
                               toast.error("Ticket Purchase Process Error");
                             }}
                             onSuccess={() => {
-                              setQuantity(1);
                               toast.success(
                                 "Ticket Purchase Process Successful, Check your transaction"
                               );
@@ -357,8 +356,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-        {/* Who Are We ( Ticketing ) */}
-        {/* <section className="section-creator my-36">
+        {/* Who Are We ( Ticketing ) */} */
+        <section className="section-creator my-36">
           <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
             <div className="mr-auto place-self-center lg:col-span-7">
               <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
@@ -378,7 +377,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </section> */}
+        </section>
         {/* Benefit */}
         {/* <section className="section-benefit my-36">
           <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
