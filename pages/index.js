@@ -10,7 +10,7 @@ import {
   useClaimConditions,
   useClaimerProofs,
   useClaimIneligibilityReasons,
-  Web3Button
+  Web3Button,
 } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import Head from "next/head";
@@ -21,7 +21,8 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/Theme.module.css";
 import About from "./components/About";
-import Benefit from './components/Benefit'
+import Benefit from "./components/Benefit";
+import { Navbar } from "./components/Navbar";
 const tokenId = 3;
 export default function Home() {
   const address = useAddress();
@@ -43,7 +44,6 @@ export default function Home() {
     }
   }, [address, isWrongNetwork, switchNetwork]);
 
-  
   const claimedSupply = useTotalCirculatingSupply(editionDrop, tokenId);
   const claimConditions = useClaimConditions(editionDrop);
   const activeClaimCondition = useActiveClaimConditionForWallet(
@@ -196,9 +196,9 @@ export default function Home() {
         activeClaimCondition.data?.currencyMetadata.value || 0
       );
       if (pricePerToken.eq(0)) {
-        return "Mint (Free)";
+        return "Beli Tiket Gratis";
       }
-      return `Mint (${priceToMint})`;
+      return `Beli Tiket`;
     }
     if (claimIneligibilityReasons.data?.length) {
       return parseIneligibility(claimIneligibilityReasons.data, quantity);
@@ -232,31 +232,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen bg-black">
-        <header className="h-16 py-12 flex items-center justify-between pr-20 bg-pink-500">
-          <div className="logo items-center flex ml-20">
-            <div className="grid grid-cols-2">
-              <div className="bg-white w-20 h-20 rounded-full"></div>
-              <div className="grid grid-rows-2 ">
-                <h2 className="text-white">TicketingNFT</h2>
-                <h3 className="text-white">Powered by Cherry Labs</h3>
-              </div>
-            </div>
-          </div>
-          <nav className="mr-32">
-            <ul className="text-white flex items-center space-x-6 font-bold text-md">
-              <li>
-                <a href="#">Home</a>
-              </li>
-              <li>
-                <a href="#">Benefit</a>
-              </li>
-              <li>
-                <a href="#about">About</a>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        {/* Hero */}
+        <Navbar />
         <section className="section-hero my-10">
           <div className="grid max-w-screen-xl px-4 py-8 mx-auto sm:grid-cols-10 lg:gap-8 xl:gap-0 lg:grid-cols-12">
             <div className="mr-auto place-self-center lg:col-span-7">
@@ -276,7 +252,7 @@ export default function Home() {
                   Loading...
                 </p>
               ) : (
-                <div className="w-96 h-auto pt-40">
+                <div className="w-96 h-auto pt-20">
                   <img
                     src="https://gateway.ipfscdn.io/ipfs/QmVDz9x8KvBBr7cesG34RrGsrorCZxv5nYJz4iEbXnPBh8/3.jpg"
                     alt={`${contractMetadata?.name} preview image`}
@@ -323,31 +299,35 @@ export default function Home() {
                             +
                           </button>
                         </div>
-
+                        <p>Harga Tiket : ${priceToMint}</p>
                         <div className={styles.mintContainer}>
                           {isSoldOut ? (
-                            <button
-                            className="bg-red-500 h-20 w-96 text-white z-100 hover:bg-red-600 font-bold"
-                          >
-                            Sold Out
-                          </button>
+                            <button className="bg-red-500 h-20 w-96 text-white z-100 hover:bg-red-600 font-bold">
+                              Sold Out
+                            </button>
                           ) : (
                             <Web3Button
-                            contractAddress={editionDrop?.getAddress() || ""}
-                            action={(cntr) => cntr.erc1155.claim(tokenId, quantity)}
-                            isDisabled={!canClaim || buttonLoading}
-                            className="bg-red-500"
-                            onError={(err) => {
-                              toast.error("Ticket Purchase Process Error");
-                            }}
-                            onSuccess={() => {
-                              toast.success(
-                                "Ticket Purchase Process Successful, Check your transaction"
-                              );
-                            }}
-                          >
-                            {buttonLoading ? "Loading..." : buttonText}
-                          </Web3Button>
+                              contractAddress={editionDrop?.getAddress() || ""}
+                              action={(contract) =>
+                                contract.erc1155.claim(tokenId, quantity)
+                                
+                              }
+                              isDisabled={!canClaim || buttonLoading}
+                              className="border-white"
+                              onError={(err) => {
+                                toast.error("Ticket Purchase Process Error");
+                                toast.dismiss(toast.loading);
+                              }}
+                              onSuccess={() => {
+                                setQuantity(1);
+                                toast.success(
+                                  "Ticket Purchase Process Successful, Check your transaction"
+                                );
+                                toast.dismiss(toast.loading);
+                              }}
+                            >
+                              {buttonLoading ? "Loading..." : buttonText}
+                            </Web3Button>
                           )}
                         </div>
                       </>
@@ -359,9 +339,9 @@ export default function Home() {
           </div>
         </section>
         {/* Who Are We ( Ticketing ) */} */
-        <About/>
+        <About />
         {/* Benefit */}
-        <Benefit/>
+        <Benefit />
       </main>
     </>
   );
